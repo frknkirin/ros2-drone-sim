@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="quadrotor_drone">
+
+  <!-- Parametreler -->
+  <xacro:property name="mass" value="1.2"/>
+  <xacro:property name="body_size_x" value="0.3"/>
+  <xacro:property name="body_size_y" value="0.3"/>
+  <xacro:property name="body_size_z" value="0.1"/>
+  <xacro:property name="arm_length" value="0.225"/>
+
+  <!-- Ana gövde (body) -->
+  <link name="base_link">
+    <inertial>
+      <mass value="${mass}"/>
+      <inertia ixx="0.02" ixy="0.0" ixz="0.0" iyy="0.02" iyz="0.0" izz="0.04"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <box size="${body_size_x} ${body_size_y} ${body_size_z}"/>
+      </geometry>
+      <material name="red">
+        <color rgba="1.0 0.0 0.0 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="${body_size_x} ${body_size_y} ${body_size_z}"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Motor 1 (ön sol) -->
+  <link name="motor_1_link">
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <cylinder radius="0.02" length="0.05"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0.0 0.0 0.0 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="0.02" length="0.05"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Motor 2 (ön sağ) -->
+  <link name="motor_2_link">
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <cylinder radius="0.02" length="0.05"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0.0 0.0 0.0 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="0.02" length="0.05"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Motor 3 (arka sol) -->
+  <link name="motor_3_link">
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <cylinder radius="0.02" length="0.05"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0.0 0.0 0.0 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="0.02" length="0.05"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Motor 4 (arka sağ) -->
+  <link name="motor_4_link">
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <cylinder radius="0.02" length="0.05"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0.0 0.0 0.0 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="0.02" length="0.05"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Motor Bağlantıları (Joints) -->
+  <!-- Motor 1: Ön Sol -->
+  <joint name="motor_1_joint" type="revolute">
+    <parent link="base_link"/>
+    <child link="motor_1_link"/>
+    <origin xyz="${arm_length} ${arm_length} 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="0" upper="2.0" effort="10.0" velocity="100.0"/>
+  </joint>
+
+  <!-- Motor 2: Ön Sağ -->
+  <joint name="motor_2_joint" type="revolute">
+    <parent link="base_link"/>
+    <child link="motor_2_link"/>
+    <origin xyz="${arm_length} ${-arm_length} 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="0" upper="2.0" effort="10.0" velocity="100.0"/>
+  </joint>
+
+  <!-- Motor 3: Arka Sol -->
+  <joint name="motor_3_joint" type="revolute">
+    <parent link="base_link"/>
+    <child link="motor_3_link"/>
+    <origin xyz="${-arm_length} ${arm_length} 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="0" upper="2.0" effort="10.0" velocity="100.0"/>
+  </joint>
+
+  <!-- Motor 4: Arka Sağ -->
+  <joint name="motor_4_joint" type="revolute">
+    <parent link="base_link"/>
+    <child link="motor_4_link"/>
+    <origin xyz="${-arm_length} ${-arm_length} 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="0" upper="2.0" effort="10.0" velocity="100.0"/>
+  </joint>
+
+  <!-- Gazebo ek ayarları -->
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so"/>
+  </gazebo>
+
+  <gazebo reference="base_link">
+    <material>Gazebo/Red</material>
+  </gazebo>
+
+  <gazebo reference="motor_1_link">
+    <material>Gazebo/Black</material>
+  </gazebo>
+
+  <gazebo reference="motor_2_link">
+    <material>Gazebo/Black</material>
+  </gazebo>
+
+  <gazebo reference="motor_3_link">
+    <material>Gazebo/Black</material>
+  </gazebo>
+
+  <gazebo reference="motor_4_link">
+    <material>Gazebo/Black</material>
+  </gazebo>
+
+</robot>
